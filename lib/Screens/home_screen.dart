@@ -46,10 +46,10 @@ class _HomeState extends State<Home> {
           children: <Widget>[
             const DrawerHeader(
               decoration: BoxDecoration(
-                color: Colors.blue,
+                color: Color.fromARGB(255, 62, 147, 216),
               ),
               child: Text(
-                'Drawer Header',
+                'Adivina el número',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 24,
@@ -57,13 +57,13 @@ class _HomeState extends State<Home> {
               ),
             ),
             ListTile(
-              title: const Text('Item 1'),
+              title: const Text('Opción 1'),
               onTap: () {
                 // Aquí puedes agregar la lógica para cuando se presione el ítem del Drawer
               },
             ),
             ListTile(
-              title: const Text('Item 2'),
+              title: const Text('Opción 2'),
               onTap: () {
                 // Aquí puedes agregar la lógica para cuando se presione el ítem del Drawer
               },
