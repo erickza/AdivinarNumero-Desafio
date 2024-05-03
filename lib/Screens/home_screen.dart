@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:adivinarnumero_desafio/services/game_programaing.dart';
 
 class Home extends StatefulWidget {
   const Home({
@@ -10,7 +12,24 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  double valor = 50.0;
+  final game = Game();
+  double valorSlider = 0;
+  final List<String> NivelDificultad = [
+    'Facil',
+    'Medio',
+    'Avanzado',
+    'Extremo'
+  ];
+
+  List<int> historial = [];
+  List<int> mayoresque = [];
+  List<int> menoresque = [];
+
+  @override
+  void initState() {
+    super.initState();
+    game.startGame();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,24 +92,33 @@ class _HomeState extends State<Home> {
                           borderRadius: BorderRadius.all(Radius.circular(10.0)),
                         ),
                       ),
+                      onSubmitted: (String value) {
+                        final game = Provider.of<Game>(context, listen: false);
+                        final input = int.tryParse(value);
+                        if (input != null) {
+                          final result = game.verificacionNum(input);
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(SnackBar(content: Text(result)));
+                        }
+                      },
                     ),
                   ),
                 ),
-                const SizedBox(
+                SizedBox(
                   width: 100,
                   height: 50,
                   child: Column(
                     children: [
-                      Text(
+                      const Text(
                         "Intentos",
                         style: TextStyle(fontSize: 18),
                       ),
-                      Expanded(
-                        child: Text(
-                          " 0 ",
-                          style: TextStyle(fontSize: 18),
-                        ),
-                      )
+                      Consumer<Game>(builder: (context, game, child) {
+                        return Text(
+                          "${game.numeroIntentos}",
+                          style: const TextStyle(fontSize: 18),
+                        );
+                      })
                     ],
                   ),
                 ),
@@ -152,13 +180,17 @@ class _HomeState extends State<Home> {
               height: 50,
             ),
             Slider(
-                value: valor,
-                max: 100,
-                divisions: 4,
-                label: "${valor.round()}",
-                onChanged: (double value) {
-                  setState(() => valor = value);
-                })
+              value: valorSlider,
+              min: 0,
+              max: NivelDificultad.length.toDouble() - 1,
+              divisions: NivelDificultad.length - 1,
+              label: NivelDificultad[valorSlider.toInt()],
+              onChanged: (double value) {
+                setState(() {
+                  game.setDificult(value);
+                });
+              },
+            )
           ],
         ),
       ),
